@@ -54,5 +54,11 @@
     },
     "require-dev": {
         "symfony/var-dumper": "^5.3"
+    },
+    "config": {
+        "allow-plugins": {
+            "laminas/laminas-component-installer": true,
+            "laminas/laminas-skeleton-installer": true
+        }
     }
 }

@@ -6,6 +6,7 @@ use Application\Entity\AtletaModalidade;
 use Application\Entity\Atleta;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query\Expr\Join;
+use Application\Entity\Bandeiras;
 
 class Pais extends EntityRepository
 {
@@ -13,7 +14,7 @@ class Pais extends EntityRepository
     {
         $query = $this->createQueryBuilder('p');
         $sql = <<<SQL
-            p.idPais, p.nomePais,
+            p.idPais, p.nomePais, b.urlBandeira,
             sum(case when at.nuPosicao = 1 then 1 else 0 end) as nuOuro,
             sum(case when at.nuPosicao = 2 then 1 else 0 end) as nuPrata,
             sum(case when at.nuPosicao = 3 then 1 else 0 end) as nuBronze,
@@ -22,6 +23,7 @@ class Pais extends EntityRepository
 SQL;
         $query->select($sql);
 
+        $query->innerJoin(Bandeiras::class, 'b', Join::WITH, 'p.idBandeira=b.idBandeira');
         $query->innerJoin(Atleta::class, 'a', Join::WITH, 'p.idPais=a.pais');
         $query->innerJoin(AtletaModalidade::class, 'at', Join::WITH, 'a.idAtleta=at.atleta');
         $query->where('at.nuPosicao <= 3');
